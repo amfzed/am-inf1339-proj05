@@ -53,7 +53,7 @@ function getModel() {
   // the convolution operation that takes place in this layer.
   model.add(tf.layers.conv2d({
     inputShape: [IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_CHANNELS],
-    kernelSize: 5,
+    kernelSize: 5, //updated from 5
     filters: 8,
     strides: 1, //how far you nudge the kernel over each time
     activation: 'relu',
@@ -70,7 +70,7 @@ function getModel() {
     kernelSize: 5,
     filters: 16,
     strides: 1,
-    activation: 'relu',
+    activation: 'sigmoid',
     kernelInitializer: 'varianceScaling'
   }));
   model.add(tf.layers.maxPooling2d({poolSize: [2, 2], strides: [2, 2]}));
@@ -109,9 +109,9 @@ async function train(model, data) {
   };
   const fitCallbacks = tfvis.show.fitCallbacks(container, metrics);
   
-  const BATCH_SIZE = 412;
-  const TRAIN_DATA_SIZE = 5500;
-  const TEST_DATA_SIZE = 1000;
+  const BATCH_SIZE = 512;
+  const TRAIN_DATA_SIZE = 8500;
+  const TEST_DATA_SIZE = 1500;
 
   const [trainXs, trainYs] = tf.tidy(() => {
     const d = data.nextTrainBatch(TRAIN_DATA_SIZE);
@@ -132,7 +132,7 @@ async function train(model, data) {
   return model.fit(trainXs, trainYs, {
     batchSize: BATCH_SIZE,
     validationData: [testXs, testYs],
-    epochs: 20,
+    epochs: 15,
     shuffle: true,
     callbacks: fitCallbacks
   });
